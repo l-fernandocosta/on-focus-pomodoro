@@ -20,7 +20,8 @@
     "@stitches/react": "^1.2.8",
     "electron-serve": "^1.1.0",
     "electron-store": "^8.1.0",
-    "framer-motion": "^9.0.7"
+    "framer-motion": "^9.0.7",
+    "react-confetti": "^6.1.0"
   },
   "devDependencies": {
     "@types/node": "^18.11.18",

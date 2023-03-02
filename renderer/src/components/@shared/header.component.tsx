@@ -35,13 +35,19 @@ export const Header = () => {
         size='sm'
         aria-label='See profile'
       >
-        <Avatar size='sm' name='Fernando Costa' bgColor='blue.500' />
+        <Avatar
+          size='sm'
+          cursor='pointer'
+          bgColor='blue.500'
+          name='Fernando Costa'
+        />
       </Tooltip>
 
       <Tooltip
         hasArrow
         placement='left'
-        colorScheme={'gray'}
+        bgColor={'gray.700'}
+        color='white'
         label={'See history'}
       >
         <IconButton

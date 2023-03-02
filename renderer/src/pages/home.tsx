@@ -1,24 +1,48 @@
 import { CustomButton } from '@/components/@shared/custom-buttom.component';
+import { FocusCategoryButton } from '@/components/@shared/focus-category.component';
 import { Header } from '@/components/@shared/header.component';
+import { useTimer } from '@/hooks/use-timer';
+import Confetti from 'react-confetti';
+
 import {
   Button,
-  Circle,
   Flex,
   Heading,
   IconButton,
   SimpleGrid,
   Text,
+  useDisclosure,
 } from '@chakra-ui/react';
+
+import { ModalPomodoroEnd } from '@/components/@shared/modal-pomodoro-end.component';
 import {
+  BackpackIcon,
   ClockIcon,
   GitHubLogoIcon,
-  LaptopIcon,
-  PlusIcon,
+  PlusCircledIcon,
+  ReloadIcon,
   RocketIcon,
   Share1Icon,
+  StopIcon,
 } from '@radix-ui/react-icons';
 
 function Home() {
+  const disclosure = useDisclosure();
+
+  const {
+    getMinute,
+    onStartNewSession,
+    restartTimer,
+    isActive,
+    timer,
+    toggleClock,
+  } = useTimer();
+
+  const ThrowConfettiWhenIsDone = () => {
+    if (timer === 0) {
+      return <Confetti />;
+    }
+  };
   return (
     <Flex width={'100%'} h='100%' flexDir={'column'} px={5} gap={5}>
       <Header />
@@ -51,7 +75,7 @@ function Home() {
           flex={1}
         >
           <Text fontSize={'9xl'} fontWeight='bold'>
-            25:00
+            {getMinute(timer)}
           </Text>
         </Flex>
 
@@ -66,88 +90,69 @@ function Home() {
           </Heading>
 
           <SimpleGrid w='100%' h='100%' flex={1} columns={2} gap={5}>
+            <FocusCategoryButton
+              name={'Studies'}
+              color={'orange.300'}
+              isSelected={true}
+              icon={RocketIcon}
+            />
+            <FocusCategoryButton
+              name={'Coding'}
+              color={'purple.300'}
+              isSelected={false}
+              icon={GitHubLogoIcon}
+            />
+            <FocusCategoryButton
+              name={'Job'}
+              color={'red.300'}
+              isSelected={false}
+              icon={BackpackIcon}
+            />
             <Flex
-              height={'5rem'}
-              position='relative'
-              borderWidth={1}
-              borderColor='orange.400'
-              borderRadius='md'
               w='100%'
-              px={5}
-              alignItems={'center'}
-              justifyContent='space-between'
-            >
-              <Flex gap={2} alignItems={'center'}>
-                <RocketIcon />
-                <Text> Studies</Text>
-              </Flex>
-              <Circle bgColor={'orange.500'} size='5' />
-              <Flex
-                w='100%'
-                backdropFilter='auto'
-                backdropBlur='lg'
-                h='100%'
-                position='absolute'
-                borderRadius={'md'}
-                left={0}
-                alignItems='center'
-                justify={'center'}
-                gap={5}
-                borderColor='transparent'
-                overflow={'hidden'}
-              >
-                <RocketIcon />
-                <Text> Studies</Text>
-              </Flex>
-            </Flex>
-            <Flex
-              height={'5rem'}
+              gap={5}
+              h='5rem'
               borderWidth={1}
+              justify='center'
               borderRadius='md'
-              px={5}
+              color='gray.600'
               alignItems={'center'}
-              justifyContent='space-between'
             >
-              <Flex gap={2} alignItems={'center'}>
-                <GitHubLogoIcon />
-                <Text> Coding </Text>
-              </Flex>
-              <Circle bgColor={'green.500'} size='5' />
-            </Flex>
-            <Flex
-              height={'5rem'}
-              borderWidth={1}
-              borderRadius='md'
-              px={5}
-              alignItems={'center'}
-              justifyContent='space-between'
-            >
-              <Flex gap={2} alignItems={'center'}>
-                <LaptopIcon />
-                <Text> Work</Text>
-              </Flex>
-              <Circle bgColor={'purple.500'} size='5' />
-            </Flex>
-            <Flex
-              gap={2}
-              color='gray.500'
-              height={'5rem'}
-              borderWidth={1}
-              borderRadius='md'
-              alignItems={'center'}
-              justifyContent='center'
-            >
-              <PlusIcon />
-              <Text> New Category</Text>
+              <PlusCircledIcon />
+              <Text>New category</Text>
             </Flex>
           </SimpleGrid>
         </Flex>
       </Flex>
-      <Flex w='100%' alignItems={'center'} justify='center'>
-        <Button h='5rem' w='60%' bgGradient={'linear(to-l, #7928CA, #FF0080)'}>
-          START SESSION
+      <Flex w='100%' alignItems={'center'} justify='center' gap='5'>
+        <Button
+          h='5rem'
+          w='60%'
+          onClick={onStartNewSession}
+          bgGradient={'linear(to-l, #7928CA, #FF0080)'}
+        >
+          {!isActive ? 'START' : 'PAUSE'} SESSION
         </Button>
+
+        <Flex h='5rem' flexDir={'column'} gap='1'>
+          {ThrowConfettiWhenIsDone()}
+          <IconButton
+            h='5rem'
+            onClick={restartTimer}
+            aria-label='Restart timer'
+            icon={<ReloadIcon />}
+            w='10%'
+          />
+          <IconButton
+            h='5rem'
+            onClick={toggleClock}
+            aria-label='Stop timer'
+            icon={<StopIcon />}
+            w='10%'
+          />
+        </Flex>
       </Flex>
+      <ModalPomodoroEnd disclosure={disclosure} />
     </Flex>
   );
 }
